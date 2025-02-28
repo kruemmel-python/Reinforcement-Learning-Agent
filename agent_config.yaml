@@ -1,0 +1,404 @@
+import yaml
+import numpy as np
+
+# Hinweis: Die Klassen KI_Agent und GlobalWorkspace sowie die Simulationsumgebung
+# sind hier Platzhalter.  Diese müssten in der tatsächlichen Implementierung definiert sein.
+# Die Callbacks sind ebenfalls nur Beispiele und müssten bei Bedarf implementiert werden.
+
+# --- Platzhalter-Klassen und Funktionen ---
+class KI_Agent:
+    """
+    Platzhalter-Klasse für den KI-Agenten.
+    In der echten Implementierung würde diese Klasse die Logik für
+    Entscheidungsfindung, Lernen, Gedächtnis, Emotionen usw. enthalten.
+    """
+    def __init__(self, config=None, workspace=None):
+        """
+        Initialisiert den KI-Agenten.
+
+        Args:
+            config (dict, optional): Konfigurationsparameter für den Agenten. Defaults to None.
+            workspace (GlobalWorkspace, optional): Der Workspace des Agenten. Defaults to None.
+        """
+        if workspace is None:
+            raise ValueError("Workspace fehlt! Ein Workspace muss beim Erstellen des KI_Agenten übergeben werden.")
+        self.config = config if config else {}
+        self.workspace = workspace
+        self.position = np.array([0.0, 0.0]) # Beispielposition
+        self.goal = np.array([1.0, 1.0]) # Beispielziel
+        self.frustration = 0.5 # Beispiel Frustration
+        self.emotion_model = BeispielEmotionsmodell() # Platzhalter für Emotionsmodell
+
+    def decide(self, zustand, ignore_emotions=False):
+        """
+        Entscheidet über eine Aktion basierend auf dem Zustand.
+
+        Args:
+            zustand: Der aktuelle Zustand des Agenten und der Umgebung.
+            ignore_emotions (bool, optional):  Emotionen bei der Entscheidung ignorieren. Defaults to False.
+
+        Returns:
+            int: Die gewählte Aktion (hier als Integer repräsentiert).
+        """
+        # TODO: Hier müsste die Entscheidungslogik des Agenten implementiert werden,
+        #       z.B. unter Berücksichtigung des Zustands, des Gedächtnisses, der Emotionen und der Konfiguration.
+        #       Für das Beispiel wählen wir zufällig eine Aktion aus.
+        action_size = self.config.get('action_size', 3) # Annahme: action_size ist in der Konfiguration
+        return np.random.choice(action_size)
+
+    def learn(self, zustand, aktion, belohnung, naechster_zustand):
+        """
+        Führt einen Lernschritt basierend auf der Erfahrung aus.
+
+        Args:
+            zustand: Der Zustand vor der Aktion.
+            aktion: Die gewählte Aktion.
+            belohnung: Die erhaltene Belohnung.
+            naechster_zustand: Der Zustand nach der Aktion.
+        """
+        # TODO: Hier müsste der Lernalgorithmus des Agenten implementiert werden,
+        #       z.B. Aktualisierung eines neuronalen Netzes oder anderer Modelle.
+        print("Agent lernt...")
+        pass
+
+class GlobalWorkspace:
+    """
+    Platzhalter-Klasse für den GlobalWorkspace.
+    In der echten Implementierung würde diese Klasse eine zentrale Umgebung
+    für den Agenten darstellen, in der er Informationen speichern und abrufen kann.
+    """
+    def __init__(self):
+        """
+        Initialisiert den GlobalWorkspace.
+        """
+        pass
+
+class BeispielEmotionsmodell:
+    """
+    Platzhalter für ein einfaches Emotionsmodell.
+    """
+    def get_emotions(self):
+        """
+        Gibt einen Vektor von Emotionen zurück (Valenz, Arousal, Dominanz).
+        """
+        # Hier nur beispielhafte, zufällige Emotionen
+        return np.array([np.random.rand(), np.random.rand(), np.random.rand()])
+
+def pre_decide_callback_example(agent, zustand):
+    """Beispiel für einen Pre-Decide-Callback."""
+    print("Pre-Decide-Callback aufgerufen!")
+    return zustand  # Gibt den Zustand unverändert zurück
+
+def post_learn_callback_example(agent, erfahrung):
+    """Beispiel für einen Post-Learn-Callback."""
+    print("Post-Learn-Callback aufgerufen!")
+    return erfahrung # Gibt die Erfahrung unverändert zurück
+
+def rule_engine_callback_example(agent, zustand):
+    """Beispiel für einen Rule-Engine-Callback."""
+    print("Rule-Engine-Callback aufgerufen!")
+    return None # Gibt keine Regel-basierte Aktion zurück
+
+def simulation(config_quelle="standard"):
+    """
+    Führt eine Simulation mit einem KI-Agenten durch, entweder mit Standardkonfiguration
+    oder mit einer Konfiguration aus einer YAML-Datei.
+
+    Args:
+        config_quelle (str, optional):  "standard" für Standardkonfiguration oder Pfad zur YAML-Datei.
+                                        Defaults to "standard".
+    """
+    print(f"\n======================== Simulation gestartet ({config_quelle}) ========================")
+
+    if config_quelle == "standard":
+        print("\nVerwende Standardkonfiguration...")
+        agent_config = {
+            'input_size': 3,
+            'action_size': 3,
+            'learning_rate': 0.001,
+            'memory_capacity': 1000
+        }
+    else:
+        print(f"\nLade Konfiguration aus YAML-Datei: '{config_quelle}'...")
+        try:
+            with open(config_quelle, 'r') as yaml_file:
+                agent_config = yaml.safe_load(yaml_file)
+        except FileNotFoundError:
+            print(f"Fehler: YAML-Datei '{config_quelle}' nicht gefunden. Verwende Standardkonfiguration.")
+            agent_config = {
+                'input_size': 3,
+                'action_size': 3,
+                'learning_rate': 0.001,
+                'memory_capacity': 1000
+            }
+        except yaml.YAMLError as e:
+            print(f"Fehler beim Laden der YAML-Datei: {e}. Verwende Standardkonfiguration.")
+            agent_config = {
+                'input_size': 3,
+                'action_size': 3,
+                'learning_rate': 0.001,
+                'memory_capacity': 1000
+            }
+
+    workspace = GlobalWorkspace() # **Workspace erstellen**
+    agent = KI_Agent(agent_config, workspace) # **Workspace übergeben**
+
+    epsilon = 0.1 # Epsilon-Wert für Epsilon-Greedy-Exploration
+
+    for episode in range(2): # Nur 2 Episoden für dieses Beispiel
+        zustand = np.random.rand(agent_config['input_size']) # Zufälliger Startzustand
+        print(f"\n--- Episode {episode + 1} ---")
+        for schritt in range(10): # 10 Schritte pro Episode
+            # **1. Epsilon-Greedy-Exploration implementieren:**
+            if np.random.rand() < epsilon:
+                aktion = np.random.choice(agent_config['action_size']) # Zufällige Aktion für Exploration
+                print(f"Schritt {schritt + 1}: Zufällige Aktion (Exploration)")
+            else:
+                aktion = agent.decide(zustand) # Agent entscheidet Aktion basierend auf Zustand
+                print(f"Schritt {schritt + 1}: Agent entscheidet Aktion: {aktion}")
+
+            # Simulationsschritt (hier vereinfacht)
+            naechster_zustand = zustand + np.random.normal(0, 0.1, agent_config['input_size'])
+
+            # **2. Belohnungsstruktur anpassen:**
+            # Beispielhafte Zielbedingung (muss an die tatsächliche Umgebung angepasst werden)
+            if np.linalg.norm(agent.position - agent.goal) < 0.5: # Beispiel: Agent ist nahe am Ziel
+                belohnung = 10  # Positive Belohnung für Zielerreichung
+                print("Ziel erreicht! Positive Belohnung.")
+            else:
+                belohnung = -1 # Negative Belohnung/Strafe
+                print("Ziel nicht erreicht. Negative Belohnung.")
+
+            agent.learn(zustand, aktion, belohnung, naechster_zustand)
+
+            # **3. Frustration reduzieren (vereinfacht -  eigentliche Logik wäre im Agenten):**
+            if agent.frustration > 0.8:
+                agent.frustration *= 0.9 # Frustration langsam abbauen
+                print(f"Frustration reduziert: {agent.frustration:.2f}")
+
+            zustand = naechster_zustand
+
+    print("\n======================== Simulation beendet ========================")
+
+
+def yaml_konfiguration_erstellen_und_laden():
+    """
+    Demonstriert das Erstellen einer YAML-Konfigurationsdatei und das Laden
+    dieser Konfiguration für eine Simulation.
+    """
+    print("\n======================== YAML-Konfiguration erstellen und laden ========================")
+    try:
+        yaml_file_path = 'agent_config.yaml'
+        with open(yaml_file_path, 'w') as yaml_file:
+            yaml.dump({
+                'input_size': 5,
+                'action_size': 3,
+                'embed_dim': 64,
+                'num_heads': 8,
+                'memory_capacity': 2000,
+                'learning_rate': 0.005,
+                'layer_growth_threshold': 0.85,
+                'emotion_dim': 4, # Beispiel: 4 Dimensionen für Emotionen
+                # **Callbacks können auch in YAML definiert werden (aber Funktionen müssen im Code definiert sein!)**
+                'pre_decide_hook': 'pre_decide_callback_example', # Name des Callbacks (String)
+                'post_learn_hook': 'post_learn_callback_example',
+                'rule_engine_hook': 'rule_engine_callback_example'
+            }, yaml_file, default_flow_style=False) # default_flow_style=False für bessere Lesbarkeit
+
+        print("\nYAML-Beispieldatei 'agent_config.yaml' erstellt.  Simulation 2 wird diese Datei laden.")
+        print("\n======================== Simulation 2: YAML-Konfiguration ========================")
+        simulation("agent_config.yaml") # Simulation mit YAML-Konfiguration starten
+
+    except FileNotFoundError:
+        print("\nDatei 'agent_config.yaml' nicht gefunden.  Überspringe Simulation 2 (YAML).")
+    except Exception as e:
+        print(f"\nFehler beim Erstellen oder Laden der YAML-Konfiguration: {e}")
+
+
+def einfache_agenten_steuerung():
+    """
+    Demonstriert die einfache Instanziierung und Steuerung des KI_Agenten
+    AUSSERHALB der Simulationsumgebung.
+    """
+    workspace = GlobalWorkspace() # **Workspace erstellen**
+    agent = KI_Agent(workspace=workspace) # Standard Agent Instanz # **Workspace übergeben**
+
+    # Beispielzustand (3 dimensionen)
+    zustand = np.array([0.5, 0.2, 0.9])
+
+    # **1. Epsilon-Greedy-Exploration (hier nicht notwendig, aber zur Illustration):**
+    epsilon = 0.1
+    if np.random.rand() < epsilon:
+        action_size = agent.config.get('action_size', 3) # Annahme: action_size ist in config oder Standard 3
+        aktion = np.random.choice(action_size)
+        print(f"\nZufällige Aktion (Exploration): {aktion}")
+    else:
+        # Agenten zur Entscheidung auffordern
+        aktion = agent.decide(zustand)
+        print(f"\nAgent entscheidet Aktion: {aktion}")
+
+    # Emotionszustand ausgeben
+    emotions = agent.emotion_model.get_emotions()
+    valence = emotions[0].item()
+    arousal = emotions[1].item()
+    dominance = emotions[2].item()
+    print(f"Agenten-Emotionen: Valenz: {valence:.2f}, Arousal: {arousal:.2f}, Dominanz: {dominance:.2f}")
+
+
+    # Beispiel-Feedback geben (optional, für Lernprozess-Demonstration)
+    naechster_zustand = zustand + np.random.normal(0, 0.1, 3)
+    # **2. Positive Belohnung geben:**
+    belohnung = 10 # Positive Belohnung
+    agent.learn(zustand, aktion, belohnung, naechster_zustand)
+    print("\nAgent hat gelernt (Beispiel-Feedback gegeben).")
+
+    # Erneute Entscheidung nach dem Lernen
+    aktion_nach_lernen = agent.decide(zustand)
+    print(f"\nAgent entscheidet Aktion nach dem Lernen: {aktion_nach_lernen}")
+
+
+def einfache_agenten_steuerung_konfiguriert():
+    """
+    Demonstriert die einfache Instanziierung und Steuerung des KI_Agenten
+    MIT Konfiguration.
+    """
+    # **Konfigurations-Dictionary definieren**
+    agent_config = {
+        'input_size': 4,  # Zustand hat nun 4 Dimensionen
+        'action_size': 3, # 3 mögliche Aktionen
+        'emotion_dim': 3,
+        'learning_rate': 0.005, # Kleinere Lernrate
+        'memory_capacity': 2000, # Größeres Gedächtnis
+        'causal_memory_capacity': 200,
+        'world_model_hidden_size': 32, # Größeres Weltmodell
+        'world_model_learning_rate': 0.0005, # Kleinere Lernrate für Weltmodell
+        'world_model_reward_history_window': 20, # Längere Reward-History im Weltmodell
+        'attention_initial_layers': 2, # Starte mit 2 Attention-Ebenen
+        'attention_layer_growth_threshold': 0.95, # Höherer Schwellwert für Ebenenwachstum
+        'novelty_threshold': 0.6, #  Angepasster Neuigkeits-Schwellwert
+        'novelty_tolerance': 0.6, # Angepasste Neuigkeits-Toleranz
+        'initial_goal_key': "reduce_frustration" # Starte mit Ziel "Frustration reduzieren"
+    }
+
+    workspace = GlobalWorkspace() # **Workspace erstellen**
+    agent = KI_Agent(config=agent_config, workspace=workspace) # Agent mit Konfiguration instanziieren # **Workspace übergeben**
+
+    # **Komplexerer Beispielzustand (als Dictionary)**
+    zustand = {
+        'sensor_wert_1': 0.7,
+        'sensor_wert_2': 0.3,
+        'umgebungs_faktor_a': 0.9,
+        'zeit_des_tages': 0.5 # Neu: Zeit des Tages als vierte Dimension
+    }
+
+    # **1. Epsilon-Greedy-Exploration (hier nicht notwendig, aber zur Illustration):**
+    epsilon = 0.1
+    if np.random.rand() < epsilon:
+        aktion = np.random.choice(agent_config['action_size'])
+        print(f"\nZufällige Aktion (Exploration): {aktion}")
+    else:
+        # Agenten zur Entscheidung auffordern
+        aktion = agent.decide(zustand)
+        print(f"\nAgent entscheidet Aktion: {aktion}")
+
+    # Emotionszustand ausgeben
+    emotions = agent.emotion_model.get_emotions()
+    valence = emotions[0].item()
+    arousal = emotions[1].item()
+    dominance = emotions[2].item()
+    print(f"Agenten-Emotionen: Valenz: {valence:.2f}, Arousal: {arousal:.2f}, Dominanz: {dominance:.2f}")
+
+
+    # Beispiel-Feedback geben (optional, für Lernprozess-Demonstration)
+    naechster_zustand = {
+        'sensor_wert_1': zustand['sensor_wert_1'] + 0.1,
+        'sensor_wert_2': zustand['sensor_wert_2'] - 0.05,
+        'umgebungs_faktor_a': zustand['umgebungs_faktor_a'],
+        'zeit_des_tages': zustand['zeit_des_tages'] + 0.01
+    }
+    # **2. Positive Belohnung geben:**
+    belohnung = 5  # Positive Belohnung
+    agent.learn(zustand, aktion, belohnung, naechster_zustand)
+    print("\nAgent hat gelernt (Beispiel-Feedback gegeben).")
+
+    # Erneute Entscheidung nach dem Lernen
+    aktion_nach_lernen = agent.decide(zustand)
+    print(f"\nAgent entscheidet Aktion nach dem Lernen: {aktion_nach_lernen}")
+
+
+def erstelle_konfigurierten_agenten(config, workspace): # **Workspace als Parameter hinzugefügt**
+    """
+    Funktion, um einen KI_Agenten aus einem Konfigurations-Dictionary zu erstellen.
+
+    Args:
+        config (dict): Ein Dictionary mit Konfigurationsparametern für den KI_Agenten.
+        workspace (GlobalWorkspace): Der Workspace für den Agenten. # **Workspace Parameter hinzugefügt**
+
+    Returns:
+        KI_Agent: Ein instanziierter KI_Agent, konfiguriert gemäß dem übergebenen Dictionary.
+    """
+    return KI_Agent(config, workspace) # Workspace weitergeben
+
+
+def demonstriere_konfigurierten_agenten():
+    """
+    Demonstriert, wie man die Funktion `erstelle_konfigurierten_agenten` nutzt,
+    um einen Agenten mit einer bestimmten Konfiguration zu erstellen und zu steuern.
+    """
+    # **Konfigurations-Dictionary definieren (Beispiel)**
+    agent_config = {
+        'input_size': 5,
+        'action_size': 4,
+        'emotion_dim': 3,
+        'learning_rate': 0.001,
+        'memory_capacity': 1500,
+        'causal_memory_capacity': 150,
+        'world_model_hidden_size': 64,
+        'world_model_learning_rate': 0.0001,
+        'world_model_reward_history_window': 30,
+        'attention_initial_layers': 3,
+        'attention_layer_growth_threshold': 0.9,
+        'novelty_threshold': 0.7,
+        'novelty_tolerance': 0.7,
+        'initial_goal_key': "explore"
+    }
+    workspace = GlobalWorkspace() # Workspace hier erstellen!
+    # Agenten mit der Konfiguration erstellen
+    agent = erstelle_konfigurierten_agenten(agent_config, workspace) # Workspace übergeben!
+    print("\nAgent mit konfigurierter Architektur erstellt.")
+
+    # Beispielzustand (angepasst an input_size=5)
+    zustand = np.array([0.1, 0.3, 0.5, 0.7, 0.9])
+
+    # **1. Epsilon-Greedy-Exploration (hier nicht notwendig, aber zur Illustration):**
+    epsilon = 0.1
+    if np.random.rand() < epsilon:
+        aktion = np.random.choice(agent_config['action_size'])
+        print(f"\nZufällige Aktion (Exploration): {aktion}")
+    else:
+        # Agenten zur Entscheidung auffordern und Emotionen ausgeben
+        aktion = agent.decide(zustand)
+        emotions = agent.emotion_model.get_emotions()
+        valence = emotions[0].item()
+        arousal = emotions[1].item()
+        dominance = emotions[2].item()
+        print(f"Agent entscheidet Aktion: {aktion}, Emotionen: Valenz: {emotions[0].item():.2f}, Arousal: {emotions[1].item():.2f}, Dominanz: {emotions[2].item():.2f}")
+
+    # Beispiel-Feedback geben
+    naechster_zustand = zustand + np.random.normal(0, 0.1, 5)
+    # **2. Positive Belohnung geben:**
+    belohnung = 5 # Mittlere Belohnung, könnte auch höher sein
+    agent.learn(zustand, aktion, belohnung, naechster_zustand)
+    print("\nAgent hat gelernt (mittleres Feedback).")
+
+    # Erneute Entscheidung nach dem Lernen
+    aktion_nach_lernen = agent.decide(zustand)
+    print(f"\nAgent entscheidet Aktion nach dem Lernen: {aktion_nach_lernen}")
+
+
+if __name__ == "__main__":
+    #simulation() # Hauptsimulation (wie zuvor)
+    #einfache_agenten_steuerung() #  <--  Stattdessen diese Funktion ausführen für einfache Steuerung
+    #einfache_agenten_steuerung_konfiguriert() # <-- Diese Funktion für konfigurierte Steuerung ausführen
+    demonstriere_konfigurierten_agenten() # <-- Diese Funktion zum Demonstrieren der Agenten-Erstellung aus Konfiguration ausführen
+    yaml_konfiguration_erstellen_und_laden() # <-- Diese Funktion demonstriert YAML Konfiguration
