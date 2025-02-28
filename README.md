@@ -98,7 +98,8 @@ pip install torch numpy scikit-learn pyyaml
     Dieses Skript startet eine Simulation mit **mehreren konfigurierbaren KI-Agenten**, die in einer **gemeinsamen Umgebung interagieren**.
 
 
-![image](https://github.com/user-attachments/assets/0c846f1f-0435-4c44-8373-c965f4edbf9c)
+![image](https://github.com/user-attachments/assets/0bff4737-2872-462a-8fc9-5567d1d765bf)
+
 
 
 
