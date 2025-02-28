@@ -173,6 +173,6 @@ Dieses Projekt ist unter der **MIT-Lizenz** lizenziert.  Sie können es frei fü
 
 ## 📧 Kontakt
 
-Für Fragen oder Anregungen können Sie sich gerne an [Ihr Name oder Ihre E-Mail-Adresse] wenden.
+Für Fragen oder Anregungen können Sie sich gerne an ralf.kruemmel+python@outlook.de wenden.
 
 **Wir hoffen, dass Ihnen dieses Projekt gefällt und es Sie inspiriert, die aufregende Welt der konfigurierbaren und kognitiven KI-Agenten weiter zu erkunden!**
