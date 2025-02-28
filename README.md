@@ -6,7 +6,7 @@
 
 **Einzigartiger, konfigurierbarer KI-Agent, der über Gedächtnis, Weltmodell, Emotionen, Ziele, hierarchische Aufmerksamkeit und regelbasierte Entscheidungsfindung verfügt, um komplexe Umgebungen zu erkunden und zu verstehen.**
 
-🎯 Dieses Projekt ist ein fortschrittlicher KI-Agent, der Reinforcement Learning mit Emotionen, Gedächtnis und Hierarchischer Selbst-Attention kombiniert. Er kann sich autonom an komplexe Umgebungen anpassen, eigene Ziele setzen und sein Verhalten mit einer Regel-Engine steuern.
+## 🎯 Dieses Projekt ist ein fortschrittlicher KI-Agent, der Reinforcement Learning mit Emotionen, Gedächtnis und Hierarchischer Selbst-Attention kombiniert. Er kann sich autonom an komplexe Umgebungen anpassen, eigene Ziele setzen und sein Verhalten mit einer Regel-Engine steuern.
 
 ## ✨ Was dieses Projekt so besonders macht
 
